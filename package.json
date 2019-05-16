@@ -1,0 +1,24 @@
+{
+  "name": "serverless-plugin-resource-tagging",
+  "version": "1.0.0",
+  "description": "Add tags to resources",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilayanambi86/serverless-plugin-resource-tagging.git"
+  },
+  "keywords": [
+    "serverless",
+    "resource",
+    "tagging"
+  ],
+  "author": "Ilayanambi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ilayanambi86/serverless-plugin-resource-tagging/issues"
+  },
+  "homepage": "https://github.com/ilayanambi86/serverless-plugin-resource-tagging#readme"
+}
