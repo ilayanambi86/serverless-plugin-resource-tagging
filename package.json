@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-resource-tagging",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Add tags to resources",
   "main": "index.js",
   "scripts": {
