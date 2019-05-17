@@ -1,5 +1,6 @@
 'use strict';
 
+
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless;
