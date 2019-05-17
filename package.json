@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-resource-tagging",
-  "version": "1.0.0",
+  "version": "1.0.8",
   "description": "Add tags to resources",
   "main": "index.js",
   "scripts": {
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/ilayanambi86/serverless-plugin-resource-tagging/issues"
   },
-  "homepage": "https://github.com/ilayanambi86/serverless-plugin-resource-tagging#readme"
+  "homepage": "https://github.com/ilayanambi86/serverless-plugin-resource-tagging#readme",
+  "dependencies": {
+    "user": "0.0.0"
+  }
 }

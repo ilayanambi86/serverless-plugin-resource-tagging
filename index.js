@@ -1,51 +1,68 @@
 'use strict';
 
+const CircularJSON = require('circular-json')
+
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless;
     this.options = options;
-
-    this.commands = {
-      welcome: {
-        usage: 'Helps you start your first Serverless plugin',
-        lifecycleEvents: [
-          'hello',
-          'world',
-        ],
-        options: {
-          message: {
-            usage:
-              'Specify the message you want to deploy '
-              + '(e.g. "--message \'My Message\'" or "-m \'My Message\'")',
-            required: true,
-            shortcut: 'm',
-          },
-        },
-      },
-    };
-
+    this.supportedTypes = [
+      "AWS::Lambda::Function",
+      "AWS::SQS::Queue",
+      "AWS::Kinesis::Stream",
+      "AWS::DynamoDB::Table",
+      "AWS::S3::Bucket",
+      "AWS::ApiGateway::Stage"
+    ]
     this.hooks = {
-      'before:welcome:hello': this.beforeWelcome.bind(this),
-      'welcome:hello': this.welcomeUser.bind(this),
-      'welcome:world': this.displayHelloMessage.bind(this),
-      'after:welcome:world': this.afterHelloWorld.bind(this),
+      'after:deploy:deploy': this.addTagsToResource.bind(this),
+      'after:aws:package:finalize:mergeCustomProviderResources': this.addTagsToResource.bind(this)
     };
   }
 
-  beforeWelcome() {
-    this.serverless.cli.log('Hello from Serverless!');
+  addTagsToResource() {
+    var resourceTags = [];
+    var self = this;
+    const template = this.serverless.service.provider.compiledCloudFormationTemplate;
+
+    self.serverless.cli.log('Inside addTagsToResource');
+
+    // find the correct stage name
+    var stage = this.serverless.service.provider.stage;
+    if (this.serverless.variables.options.stage) {
+      stage = this.serverless.variables.options.stage;
+    }
+
+    if (typeof this.serverless.service.provider.resourceTags === 'object') {
+      var tags = this.serverless.service.provider.resourceTags
+      Object.keys(tags).forEach(function (key) {
+        resourceTags.push({ "Key": key, "Value": tags[key] })
+      });
+    }
+
+    Object.keys(template.Resources).forEach(function (key) {
+      var resourceType = template.Resources[key]['Type']
+      if ((self.supportedTypes.indexOf(resourceType) !== -1) && Array.isArray(resourceTags) && resourceTags.length > 0) {
+        if (template.Resources[key]['Properties']) {
+          var tags = template.Resources[key]['Properties']['Tags']
+          if (tags) {
+            template.Resources[key]['Properties']['Tags'] = tags.concat(resourceTags.filter(obj => (self.getTagNames(tags).indexOf(obj["Key"]) === -1)))
+          } else {
+            template.Resources[key]['Properties']['Tags'] = resourceTags
+          }
+        } else {
+          self.serverless.cli.log('Properties not available for ' + resourceType);
+        }
+      }
+    });
   }
 
-  welcomeUser() {
-    this.serverless.cli.log('Your message:');
-  }
-
-  displayHelloMessage() {
-    this.serverless.cli.log(`${this.options.message}`);
-  }
-
-  afterHelloWorld() {
-    this.serverless.cli.log('Please come again!');
+  getTagNames(srcArray) {
+    var tagNames = []
+    srcArray.forEach(function (element) {
+      tagNames.push(element["Key"])
+    });
+    return tagNames
   }
 }
 
