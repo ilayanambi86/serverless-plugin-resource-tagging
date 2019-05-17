@@ -24,9 +24,6 @@ class ServerlessPlugin {
     var self = this;
     const template = this.serverless.service.provider.compiledCloudFormationTemplate;
 
-    self.serverless.cli.log('Inside addTagsToResource');
-
-    // find the correct stage name
     var stage = this.serverless.service.provider.stage;
     if (this.serverless.variables.options.stage) {
       stage = this.serverless.variables.options.stage;
@@ -54,6 +51,7 @@ class ServerlessPlugin {
         }
       }
     });
+    self.serverless.cli.log('Updated resource tags..');
   }
 
   getTagNames(srcArray) {
