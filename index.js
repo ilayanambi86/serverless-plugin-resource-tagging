@@ -1,6 +1,5 @@
 'use strict';
 
-const CircularJSON = require('circular-json')
 
 class ServerlessPlugin {
   constructor(serverless, options) {
