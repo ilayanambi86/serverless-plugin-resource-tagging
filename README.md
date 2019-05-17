@@ -15,6 +15,8 @@ provider:
     resourceTags:
         Tag1: "Tag1 value"
         Tag2: "Tag2 value"
+plugins:
+  - serverless-plugin-resource-tagging
 ```
     
 ### Suported AWS resources
