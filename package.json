@@ -1,7 +1,7 @@
 {
   "name": "serverless-plugin-resource-tagging",
-  "version": "1.0.10",
-  "description": "Add tags to resources",
+  "version": "1.0.11",
+  "description": "Add tags to AWS resources",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,9 +11,13 @@
     "url": "git+https://github.com/ilayanambi86/serverless-plugin-resource-tagging.git"
   },
   "keywords": [
-    "serverless",
-    "resource",
-    "tagging"
+    "serverless plugin api gateway stage tagging",
+    "serverless plugin",
+    "api gateway stage tagging",
+    "aws serverless api gateway plugin",
+    "api gateway stack tagging",
+    "stackTags",
+    "api gateway"
   ],
   "author": "Ilayanambi",
   "license": "MIT",
@@ -22,6 +26,7 @@
   },
   "homepage": "https://github.com/ilayanambi86/serverless-plugin-resource-tagging#readme",
   "dependencies": {
-    "user": "0.0.0"
+    "user": "0.0.0",
+    "underscore": "1.8.3"
   }
 }
