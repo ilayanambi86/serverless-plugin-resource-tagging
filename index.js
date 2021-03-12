@@ -5,7 +5,7 @@ const _ = require('underscore');
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless;
-    this.options = options;
+    this.options = options || {};
     this.provider = serverless ? serverless.getProvider('aws') : null;
     this.service = serverless.service;
     this.stage = null;
@@ -39,13 +39,13 @@ class ServerlessPlugin {
 
 
     this.stage = this.serverless.service.provider.stage;
-    if (this.serverless.variables.options.stage) {
-      this.stage = this.serverless.variables.options.stage;
+    if (this.options.stage) {
+      this.stage = this.options.stage;
     }
 
     this.region = this.serverless.service.provider.region;
-    if (this.serverless.variables.options.region) {
-      this.region = this.serverless.variables.options.region;
+    if (this.options.region) {
+      this.region = this.options.region;
     }
 
     if (typeof this.serverless.service.provider.stackTags === 'object') {
