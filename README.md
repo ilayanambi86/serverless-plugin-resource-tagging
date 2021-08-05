@@ -39,5 +39,6 @@ AWS::S3::Bucket
 AWS::SNS::Topic
 AWS::SQS::Queue
 AWS::SSM::Parameter
+AWS::StepFunctions::StateMachine
 AWS::WAFv2::WebACL
 ```
