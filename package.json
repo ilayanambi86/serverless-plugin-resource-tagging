@@ -24,9 +24,5 @@
   "bugs": {
     "url": "https://github.com/ilayanambi86/serverless-plugin-resource-tagging/issues"
   },
-  "homepage": "https://github.com/ilayanambi86/serverless-plugin-resource-tagging#readme",
-  "dependencies": {
-    "user": "0.0.0",
-    "underscore": "^1.12.1"
-  }
+  "homepage": "https://github.com/ilayanambi86/serverless-plugin-resource-tagging#readme"
 }
