@@ -32,4 +32,5 @@ AWS::DynamoDB::Table
 AWS::S3::Bucket
 AWS::ApiGateway::Stage
 AWS::CloudFront::Distribution
+AWS::Logs::LogGroup
 ```
