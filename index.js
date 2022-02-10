@@ -25,9 +25,6 @@ class ServerlessPlugin {
       'AWS::ApiGatewayV2::Stage',
       'AWS::SSM::Parameter',
     ];
-    this.programmaticTagsResources = {
-      'AWS::Logs::LogGroup': this._addTagsToLogsLogGroup.bind(this), // see https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs/pull/53
-    };
 
     if (!this.provider) {
       throw new Error('This plugin must be used with AWS');
@@ -35,7 +32,6 @@ class ServerlessPlugin {
 
     this.hooks = {
       'after:aws:package:finalize:mergeCustomProviderResources': this._addTagsToResources.bind(this),
-      'after:deploy:deploy': this._addTagsProgrammatically.bind(this),
     };
   }
 
@@ -64,39 +60,6 @@ class ServerlessPlugin {
     });
 
     this.serverless.cli.log('Updated AWS resource tags');
-  }
-
-  async _addTagsProgrammatically() {
-    const stackTags = this._getStackTags();
-    if (stackTags.length === 0) {
-      return;
-    }
-
-    const stackName = this.provider.naming.getStackName();
-    const describeResponse = await this.provider.request('CloudFormation', 'describeStackResources', {StackName: stackName});
-
-    const promises = [];
-
-    const programmaticResourceKeys = Object.keys(this.programmaticTagsResources);
-    describeResponse.StackResources.forEach(resource => {
-      if (programmaticResourceKeys.includes(resource.ResourceType)) {
-        promises.push(
-          this.programmaticTagsResources[resource.ResourceType](resource, stackTags),
-        );
-      }
-    });
-
-    if (promises.length) {
-      await Promise.all(promises);
-      this.serverless.cli.log(`Updated ${promises.length} AWS resource tags programmatically`);
-    }
-  }
-
-  _addTagsToLogsLogGroup(resource, tags) {
-    return this.provider.request('CloudWatchLogs', 'tagLogGroup', {
-      logGroupName: resource.PhysicalResourceId,
-      tags: this._tagsListToObject(tags),
-    });
   }
 
   _readTagsFromList(tags) {
