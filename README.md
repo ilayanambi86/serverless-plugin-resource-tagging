@@ -25,12 +25,20 @@ plugins:
     
 ### Suported AWS resources
 ```
-AWS::Lambda::Function
-AWS::SQS::Queue
-AWS::Kinesis::Stream
-AWS::DynamoDB::Table
-AWS::S3::Bucket
+AWS::ApiGateway::RestApi
 AWS::ApiGateway::Stage
+AWS::ApiGatewayV2::Api
+AWS::ApiGatewayV2::Stage
 AWS::CloudFront::Distribution
+AWS::DynamoDB::Table
+AWS::IAM::Role
+AWS::Kinesis::Stream
+AWS::Lambda::Function
 AWS::Logs::LogGroup
+AWS::S3::Bucket
+AWS::SNS::Topic
+AWS::SQS::Queue
+AWS::SSM::Parameter
+AWS::StepFunctions::StateMachine
+AWS::WAFv2::WebACL
 ```
