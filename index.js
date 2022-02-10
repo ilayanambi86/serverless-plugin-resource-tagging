@@ -13,6 +13,7 @@ class ServerlessPlugin {
       'AWS::IAM::Role',
       'AWS::Kinesis::Stream',
       'AWS::Lambda::Function',
+      'AWS::Logs::LogGroup',
       'AWS::S3::Bucket',
       'AWS::SNS::Topic',
       'AWS::SQS::Queue',

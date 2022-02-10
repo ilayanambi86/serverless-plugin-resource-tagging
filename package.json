@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-resource-tagging",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Add tags to AWS resources",
   "main": "index.js",
   "scripts": {
