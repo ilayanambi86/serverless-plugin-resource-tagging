@@ -56,10 +56,18 @@ class ServerlessPlugin {
       });
     }
 
+    const isValidProperties = props => {
+      return props && (
+        Object.keys(props).length > 1
+        ||
+        !`${Object.keys(props)[0]}`.match(new RegExp('^!|Fn::', 'g'))
+      );
+    };
+
     Object.keys(template.Resources).forEach(function (key) {
       var resourceType = template.Resources[key]['Type']
       if ((self.supportedTypes.indexOf(resourceType) !== -1) && Array.isArray(stackTags) && stackTags.length > 0) {
-        if (template.Resources[key]['Properties']) {
+        if (isValidProperties(template.Resources[key]['Properties'])) {
           var tags = template.Resources[key]['Properties']['Tags']
           if (tags) {
             template.Resources[key]['Properties']['Tags'] = tags.concat(stackTags.filter(obj => (self._getTagNames(tags).indexOf(obj["Key"]) === -1)))
