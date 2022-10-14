@@ -1,5 +1,6 @@
 'use strict';
 
+const { get, uniq } = require('lodash');
 const _ = require('underscore');
 
 class ServerlessPlugin {
@@ -33,7 +34,40 @@ class ServerlessPlugin {
     };
   }
 
+  get log() {
+    const pluginId = 'resource-tagging-plugin';
+    return {
+      info: (msg) => {
+        this.serverless.cli.log(`[${pluginId}] INFO ${msg}`);
+      },
+      error: (msg) => {
+        this.serverless.cli.log(`[${pluginId}] ERROR ${msg}`);
+      },
+      warn: (msg) => {
+        this.serverless.cli.log(`[${pluginId}] WARN ${msg}`);
+      },
+    };
+  }
+
+  get pluginConfig() {
+    const {
+      types: userTypes = [],
+      exclusive = false,
+    } = get(this, 'serverless.service.custom.resourceTagging', {});
+
+    return {
+      types: exclusive
+        ? userTypes
+        : uniq([
+          ...this.supportedTypes,
+          ...userTypes,
+        ]),
+    };
+  }
+
   _addTagsToResource() {
+    this.log.info(`config: ${JSON.stringify(this.pluginConfig, null, 2)}`);
+
     var stackTags = [];
     var self = this;
     const template = this.serverless.service.provider.compiledCloudFormationTemplate;
@@ -56,10 +90,18 @@ class ServerlessPlugin {
       });
     }
 
+    const isValidProperties = props => {
+      return props && (
+        Object.keys(props).length > 1
+        ||
+        !`${Object.keys(props)[0]}`.match(new RegExp('^!|Fn::', 'g'))
+      );
+    };
+
     Object.keys(template.Resources).forEach(function (key) {
       var resourceType = template.Resources[key]['Type']
-      if ((self.supportedTypes.indexOf(resourceType) !== -1) && Array.isArray(stackTags) && stackTags.length > 0) {
-        if (template.Resources[key]['Properties']) {
+      if ((self.pluginConfig.types.indexOf(resourceType) !== -1) && Array.isArray(stackTags) && stackTags.length > 0) {
+        if (isValidProperties(template.Resources[key]['Properties'])) {
           var tags = template.Resources[key]['Properties']['Tags']
           if (tags) {
             template.Resources[key]['Properties']['Tags'] = tags.concat(stackTags.filter(obj => (self._getTagNames(tags).indexOf(obj["Key"]) === -1)))
@@ -67,7 +109,7 @@ class ServerlessPlugin {
             template.Resources[key]['Properties']['Tags'] = stackTags
           }
         } else {
-          self.serverless.cli.log('Properties not available for ' + resourceType);
+          self.log.warn('Properties not available for ' + resourceType);
         }
       }
 
@@ -76,10 +118,12 @@ class ServerlessPlugin {
         self.isApiGatewayStageAvailableInTemplate = true;
       }
     });
-    self.serverless.cli.log('Updated AWS resource tags..');
+    self.log.info('Updated AWS resource tags..');
   }
 
   _addAPIGatewayStageTags() {
+    this.log.info(`config: ${JSON.stringify(this.pluginConfig, null, 2)}`);
+
     var self = this;
     var stackName = this.provider.naming.getStackName();
     if (!self.isApiGatewayStageAvailableInTemplate) {
@@ -93,10 +137,10 @@ class ServerlessPlugin {
             };
             promiseStack.push(self.provider.request('APIGateway', 'tagResource', apiStageParams))
           });
-          return Promise.all(promiseStack).then(resp => self.serverless.cli.log('Updated APIGateway resource tags..'));
+          return Promise.all(promiseStack).then(resp => self.log.info('Updated APIGateway resource tags..'));
         });
     } else {
-      self.serverless.cli.log('APIGateway stage already available in serverless.yml. Tag update skipped.');
+      self.log.info('APIGateway stage already available in serverless.yml. Tag update skipped.');
       return null;
     }
   }

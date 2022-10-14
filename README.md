@@ -13,7 +13,7 @@ npm install serverless-plugin-resource-tagging
 ```
 
 ### serverless.yml
-```
+```yml
 provider:
     name: XXX
     stackTags:
@@ -33,4 +33,23 @@ AWS::S3::Bucket
 AWS::ApiGateway::Stage
 AWS::CloudFront::Distribution
 AWS::Logs::LogGroup
+```
+
+Optionally, you can add other AWS resource types for tagging with
+```yml
+custom:
+  resourceTagging:
+    types:
+      - AWS::SNS::Topic
+      - AWS::IAM::Role
+```
+
+If you only want specific resources you define, add the `exclusive` flag
+```yml
+custom:
+  resourceTagging:
+    exclusive: true
+    types:
+      - AWS::SNS::Topic
+      - AWS::IAM::Role
 ```
