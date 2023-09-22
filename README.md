@@ -23,7 +23,7 @@ plugins:
   - serverless-plugin-resource-tagging
 ```
     
-### Suported AWS resources
+### Supported AWS resources
 ```
 AWS::Lambda::Function
 AWS::SQS::Queue
