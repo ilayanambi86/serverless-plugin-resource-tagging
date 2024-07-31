@@ -33,4 +33,6 @@ AWS::S3::Bucket
 AWS::ApiGateway::Stage
 AWS::CloudFront::Distribution
 AWS::Logs::LogGroup
+AWS::CloudWatch::Alarm
+AWS::Events::Rule
 ```
