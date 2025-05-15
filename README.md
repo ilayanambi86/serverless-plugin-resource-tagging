@@ -5,9 +5,9 @@ We have to remove the stack and redeploy to get the new tags reflect. This plugi
 
 #### Note: 
  - This plugin is only for AWS.
- - This plugin will support APIGateway stage tags even if stage is not configured in serverless.yml and clouformation created one. 
+ - This plugin will support APIGateway stage tags even if stage is not configured in serverless.yml and cloudformation created one.
 
-### Using this pluging
+### Using this plugin
 ```
 npm install serverless-plugin-resource-tagging
 ```
@@ -23,7 +23,7 @@ plugins:
   - serverless-plugin-resource-tagging
 ```
     
-### Suported AWS resources
+### Supported AWS resources
 ```
 AWS::Lambda::Function
 AWS::SQS::Queue
